@@ -180,8 +180,9 @@ export const generateSalarySummary = async (dataArray) => {
 
         let startX = 10;
         let y = 35;
-        const colW = [10, 12, 12, 20, 35, 25, 18, 18, 18, 20, 12, 15, 12, 12, 20, 20];
-        const headers = ["งวดที่", "เดือน", "ปี", "เลขบัตร/รหัส", "ชื่อ-สกุล", "ตำแหน่ง", "เงินเดือน", "ค่าตอบแทน", "อื่นๆ", "รวมรับ", "สปส.", "เบิก", "น้ำ", "ไฟ", "รวมหัก", "สุทธิ"];
+        // ปรับจำนวนและขนาดคอลัมน์ใหม่ให้มี "ภาษี" และพอดีกับหน้ากระดาษ
+        const colW = [10, 10, 10, 20, 35, 25, 16, 16, 12, 18, 12, 12, 12, 10, 10, 18, 18];
+        const headers = ["งวดที่", "เดือน", "ปี", "เลขบัตร/รหัส", "ชื่อ-สกุล", "ตำแหน่ง", "เงินเดือน", "ค่าตอบแทน", "อื่นๆ", "รวมรับ", "สปส.", "ภาษี", "เบิก", "น้ำ", "ไฟ", "รวมหัก", "สุทธิ"];
         
         doc.setFontSize(10);
         doc.setDrawColor(0, 0, 0);
@@ -190,12 +191,12 @@ export const generateSalarySummary = async (dataArray) => {
         let currentX = startX;
         
         // วาดหัวตารางแบ่งตามสีที่ระบุ
-        for(let i=0; i<16; i++) {
+        for(let i=0; i<17; i++) {
             if(i >= 0 && i <= 2) doc.setFillColor(200, 220, 255); // ฟ้าอ่อน (งวด/เดือน/ปี)
             else if(i >= 3 && i <= 5) doc.setFillColor(255, 250, 200); // เหลืองอ่อน (ข้อมูลพนักงาน)
             else if(i >= 6 && i <= 9) doc.setFillColor(220, 255, 220); // เขียวอ่อน (รายรับ)
-            else if(i >= 10 && i <= 14) doc.setFillColor(255, 220, 220); // ชมพูอ่อน/แดงอ่อน (รายหัก)
-            else if(i === 15) doc.setFillColor(230, 230, 240); // เทาฟ้า (สุทธิ)
+            else if(i >= 10 && i <= 15) doc.setFillColor(255, 220, 220); // ชมพูอ่อน/แดงอ่อน (รายหัก)
+            else if(i === 16) doc.setFillColor(230, 230, 240); // เทาฟ้า (สุทธิ)
 
             doc.rect(currentX, y, colW[i], 10, 'FD'); // วาดกรอบพร้อมเติมสี
             doc.text(headers[i], currentX + colW[i]/2, y + 6, { align: "center" });
@@ -215,12 +216,12 @@ export const generateSalarySummary = async (dataArray) => {
 
             currentX = startX;
 
-            for (let i = 0; i < 16; i++) {
+            for (let i = 0; i < 17; i++) {
                 let textVal = row[i];
                 if (textVal == null) textVal = "-";
 
                 // แปลงตัวเลขใส่คอมม่าถ้าเป็นคอลัมน์เงิน
-                if (i >= 6 && i <= 15) {
+                if (i >= 6 && i <= 16) {
                     let num = parseFloat(String(textVal).replace(/,/g, ''));
                     if (isNaN(num)) num = 0;
                     textVal = num.toLocaleString(undefined, {minimumFractionDigits:0, maximumFractionDigits:0});
