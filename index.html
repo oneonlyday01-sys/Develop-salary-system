@@ -149,6 +149,9 @@
                             <input type="date" id="d-date" class="form-control" onchange="handleDailyDateChange()">
                         </div>
 
+                        <!-- เพิ่มการแสดงชื่อพนักงานที่ถูกเลือกเพื่อป้องกันการสับสน -->
+                        <h3 id="d-selected-emp-name" class="text-lg font-bold text-blue-600 mb-2 hidden bg-blue-50 px-4 py-2 rounded-lg border border-blue-100"></h3>
+
                         <div id="emp-stats-area" class="hidden stats-card">
                             <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-4">
                                 <div class="flex justify-between items-start mb-2">
@@ -176,16 +179,21 @@
 
                             <!-- Tab Content: Shift -->
                             <div id="d-sec-shift" class="space-y-4">
+                                <!-- จัดเรียงใหม่ให้อยู่แถวเดียวกันด้วย Grid ป้องกันฟอร์มยาวเกินไปตามแบบ -->
                                 <div class="card p-5">
-                                    <h3 class="font-bold text-slate-700 mb-4 flex items-center text-sm"><i class="fa-regular fa-clock mr-2 text-blue-500"></i> ช่วงเวลาทำงาน</h3>
-                                    <div class="grid grid-cols-2 gap-3">
-                                        <label class="cursor-pointer"><input type="radio" name="d-shift" value="Day" class="shift-radio hidden" checked><div class="border border-slate-200 rounded-xl p-3 text-center hover:bg-slate-50 transition relative"><i class="fa-solid fa-sun text-xl text-orange-400 mb-1 block"></i><span class="font-bold text-sm">กะกลางวัน</span><i class="fa-solid fa-circle-check absolute top-2 right-2 text-blue-500 opacity-0 transform scale-50 transition check-icon"></i></div></label>
-                                        <label class="cursor-pointer"><input type="radio" name="d-shift" value="Night" class="shift-radio hidden"><div class="border border-slate-200 rounded-xl p-3 text-center hover:bg-slate-50 transition relative"><i class="fa-solid fa-moon text-xl text-indigo-400 mb-1 block"></i><span class="font-bold text-sm">กะกลางคืน</span><i class="fa-solid fa-circle-check absolute top-2 right-2 text-blue-500 opacity-0 transform scale-50 transition check-icon"></i></div></label>
-                                    </div>
-                                    
-                                    <div class="mt-4 pt-4 border-t border-slate-100">
-                                        <div class="mb-3"><label class="text-xs font-bold text-slate-500 mb-1 block">ค่าแรงรายวัน (บาท)</label><input type="number" id="d-wage" class="form-control text-lg font-bold text-slate-700" placeholder="0" oninput="calcDaily()"></div>
-                                        <div><label class="text-xs font-bold text-slate-400 mb-1 block">หมายเหตุ</label><input type="text" id="d-remarks" class="form-control text-sm" placeholder="เช่น มาสาย, กลับก่อน"></div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <h3 class="font-bold text-slate-700 mb-4 flex items-center text-sm"><i class="fa-regular fa-clock mr-2 text-blue-500"></i> ช่วงเวลาทำงาน</h3>
+                                            <div class="grid grid-cols-2 gap-3">
+                                                <label class="cursor-pointer"><input type="radio" name="d-shift" value="Day" class="shift-radio hidden" checked><div class="border border-slate-200 rounded-xl p-3 text-center hover:bg-slate-50 transition relative"><i class="fa-solid fa-sun text-xl text-orange-400 mb-1 block"></i><span class="font-bold text-sm">กะกลางวัน</span><i class="fa-solid fa-circle-check absolute top-2 right-2 text-blue-500 opacity-0 transform scale-50 transition check-icon"></i></div></label>
+                                                <label class="cursor-pointer"><input type="radio" name="d-shift" value="Night" class="shift-radio hidden"><div class="border border-slate-200 rounded-xl p-3 text-center hover:bg-slate-50 transition relative"><i class="fa-solid fa-moon text-xl text-indigo-400 mb-1 block"></i><span class="font-bold text-sm">กะกลางคืน</span><i class="fa-solid fa-circle-check absolute top-2 right-2 text-blue-500 opacity-0 transform scale-50 transition check-icon"></i></div></label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-bold text-slate-700 mb-4 flex items-center text-sm"><i class="fa-solid fa-coins mr-2 text-blue-500"></i> ค่าแรงและหมายเหตุ</h3>
+                                            <div class="mb-3"><label class="text-xs font-bold text-slate-500 mb-1 block">ค่าแรงรายวัน (บาท)</label><input type="number" id="d-wage" class="form-control text-lg font-bold text-slate-700" placeholder="0" oninput="calcDaily()"></div>
+                                            <div><label class="text-xs font-bold text-slate-400 mb-1 block">หมายเหตุ</label><input type="text" id="d-remarks" class="form-control text-sm" placeholder="เช่น มาสาย, กลับก่อน"></div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -374,17 +382,45 @@
                             <h3 class="font-bold text-slate-800 mb-4 flex items-center"><i class="fa-solid fa-pen-to-square mr-2"></i> บันทึกงานใหม่</h3>
                             <input type="hidden" id="c-id">
                             <div class="space-y-4">
-                                <div><label class="text-xs font-bold text-slate-500 mb-1 block">วันที่ทำรายการ</label><input type="date" id="c-date" class="form-control"></div>
-                                <div><label class="text-xs font-bold text-slate-500 mb-1 block">เลือกผู้รับเหมา</label><select id="c-emp" class="form-control cursor-pointer"></select></div>
-                                <div><label class="text-xs font-bold text-slate-500 mb-1 block">ชื่องานที่จ้าง</label><input type="text" id="c-job" class="form-control" placeholder="เช่น เดินสายไฟ, ทาสี"></div>
-                                <div><label class="text-xs font-bold text-slate-500 mb-1 block">จำนวนเงินค่าจ้าง</label><input type="number" id="c-amount" class="form-control text-lg font-bold text-slate-700" placeholder="0.00" oninput="calcWHT()"></div>
+                                <div><label class="text-xs font-bold text-slate-500 mb-1 block">วันที่ทำรายการ</label><input type="date" id="c-date" class="form-control" onchange="checkContractorAutoFill()"></div>
+                                
+                                <div class="bg-slate-50 p-2 rounded-lg border border-slate-200">
+                                    <label class="text-xs font-bold text-slate-600 mb-2 block">ประเภทผู้รับเงิน</label>
+                                    <div class="flex gap-4">
+                                        <label class="flex items-center cursor-pointer text-sm"><input type="radio" name="c-type" value="internal" checked onchange="toggleContractorType()" class="mr-2 text-blue-600"> พนักงานในบริษัท</label>
+                                        <label class="flex items-center cursor-pointer text-sm"><input type="radio" name="c-type" value="external" onchange="toggleContractorType()" class="mr-2 text-blue-600"> บุคคล/บริษัทภายนอก</label>
+                                    </div>
+                                </div>
+
+                                <div id="c-internal-sec">
+                                    <label class="text-xs font-bold text-slate-500 mb-1 block">เลือกผู้รับเหมา/พนักงาน</label>
+                                    <select id="c-emp" class="form-control cursor-pointer" onchange="checkContractorAutoFill()"></select>
+                                </div>
+
+                                <div id="c-external-sec" class="hidden space-y-3 bg-blue-50/50 p-3 rounded-lg border border-blue-100">
+                                    <div><label class="text-xs font-bold text-slate-500 mb-1 block">ชื่อ (บุคคล/บริษัท)</label><input type="text" id="c-ext-name" class="form-control" placeholder="ชื่อผู้รับเงิน"></div>
+                                    <div><label class="text-xs font-bold text-slate-500 mb-1 block">ที่อยู่</label><textarea id="c-ext-address" class="form-control h-20" placeholder="ที่อยู่สำหรับออกใบเสร็จ"></textarea></div>
+                                    <div><label class="text-xs font-bold text-slate-500 mb-1 block">เลขประจำตัวประชาชน/ผู้เสียภาษี</label><input type="text" id="c-ext-tax" class="form-control" placeholder="เลข 13 หลัก"></div>
+                                </div>
+
+                                <div class="border border-slate-200 rounded-lg p-3">
+                                    <div class="flex justify-between items-center mb-3">
+                                        <label class="text-xs font-bold text-slate-500 block">รายละเอียดรายการจ้าง</label>
+                                        <button type="button" onclick="addContractorJobRow()" class="text-[10px] bg-slate-800 text-white px-2 py-1 rounded hover:bg-slate-700 transition font-bold">+ เพิ่มรายการ</button>
+                                    </div>
+                                    <div id="c-job-container" class="space-y-2 mb-3"></div>
+                                    <div class="border-t pt-2">
+                                        <label class="text-xs font-bold text-slate-500 mb-1 block">รวมจำนวนเงินค่าจ้าง</label>
+                                        <input type="number" id="c-amount" class="form-control text-lg font-bold text-slate-700 bg-slate-100" placeholder="0.00" readonly>
+                                    </div>
+                                </div>
                                 
                                 <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
                                     <label class="text-xs font-bold text-slate-500 mb-2 block">ภาษีหัก ณ ที่จ่าย (WHT)</label>
                                     <div class="flex gap-4">
-                                        <label class="flex items-center cursor-pointer"><input type="radio" name="c-wht" value="0" checked onchange="calcWHT()" class="mr-2 text-blue-600">ไม่หัก</label>
-                                        <label class="flex items-center cursor-pointer"><input type="radio" name="c-wht" value="1" onchange="calcWHT()" class="mr-2 text-blue-600">1% (ขนส่ง)</label>
-                                        <label class="flex items-center cursor-pointer"><input type="radio" name="c-wht" value="3" onchange="calcWHT()" class="mr-2 text-blue-600">3% (บริการ)</label>
+                                        <label class="flex items-center cursor-pointer text-sm"><input type="radio" name="c-wht" value="0" checked onchange="calcWHT()" class="mr-2 text-blue-600">ไม่หัก</label>
+                                        <label class="flex items-center cursor-pointer text-sm"><input type="radio" name="c-wht" value="1" onchange="calcWHT()" class="mr-2 text-blue-600">1% (ขนส่ง)</label>
+                                        <label class="flex items-center cursor-pointer text-sm"><input type="radio" name="c-wht" value="3" onchange="calcWHT()" class="mr-2 text-blue-600">3% (บริการ)</label>
                                     </div>
                                     <div class="flex justify-between mt-3 text-sm border-t pt-2"><span>หักภาษี:</span><span id="c-tax-disp" class="text-red-500 font-bold">0.00</span></div>
                                     <div class="flex justify-between text-sm mt-1"><span>ยอดจ่ายสุทธิ:</span><span id="c-net-disp" class="text-green-600 font-bold text-lg">0.00</span></div>
@@ -452,6 +488,7 @@
                                 <h3 class="font-bold text-slate-700">รายการล่าสุด</h3>
                                 <div class="flex items-center gap-2">
                                     <button onclick="changeLedgerMonth(-1)" class="w-8 h-8 rounded-full hover:bg-slate-200 flex items-center justify-center text-slate-600"><i class="fa-solid fa-chevron-left"></i></button>
+                                    <span class="text-sm font-bold text-slate-600 mx-2" id="l-list-month"></span>
                                     <div class="flex gap-2"><div class="text-xs px-2 py-1 bg-green-100 text-green-700 rounded">รับ: <span id="ldg-sum-inc">0</span></div><div class="text-xs px-2 py-1 bg-red-100 text-red-700 rounded">จ่าย: <span id="ldg-sum-exp">0</span></div></div>
                                     <button onclick="changeLedgerMonth(1)" class="w-8 h-8 rounded-full hover:bg-slate-200 flex items-center justify-center text-slate-600"><i class="fa-solid fa-chevron-right"></i></button>
                                 </div>
@@ -596,14 +633,7 @@
                             <div><label class="block text-sm font-bold mb-1 text-slate-700">ที่อยู่</label><textarea name="company_address" id="set-address" class="form-control" rows="3"></textarea></div>
                         </div>
                     </div>
-                    <div class="card">
-                         <h3 class="font-bold border-b pb-3 mb-4 text-purple-600"><i class="fa-solid fa-list mr-2"></i> หมวดหมู่บัญชี</h3>
-                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                             <div><label class="block text-sm font-bold mb-1 text-slate-700">หมวดรายรับ (คั่นด้วยจุลภาค ,)</label><textarea name="acc_income_cats" id="set-inc-cat" class="form-control" rows="3"></textarea></div>
-                             <div><label class="block text-sm font-bold mb-1 text-slate-700">หมวดรายจ่าย (คั่นด้วยจุลภาค ,)</label><textarea name="acc_expense_cats" id="set-exp-cat" class="form-control" rows="3"></textarea></div>
-                         </div>
-                    </div>
-                    <div class="card"><h3 class="font-bold border-b pb-3 mb-4 text-green-600"><i class="fa-solid fa-calculator mr-2"></i> การคำนวณเงินเดือน</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-6"><div><label class="block text-sm font-bold mb-1 text-slate-700">ประกันสังคม (%)</label><input name="sso_rate" id="set-sso" type="number" step="0.01" class="form-control"></div><div><label class="block text-sm font-bold mb-1 text-slate-700">เพดานประกันสังคม</label><input name="sso_max" id="set-sso-max" type="number" class="form-control"></div></div></div>
+                    <div class="card"><h3 class="font-bold border-b pb-3 mb-4 text-green-600"><i class="fa-solid fa-calculator mr-2"></i> การคำนวณเงินเดือน</h3><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"><div><label class="block text-sm font-bold mb-1 text-slate-700">ประกันสังคม (%)</label><input name="sso_rate" id="set-sso" type="number" step="0.01" class="form-control"></div><div><label class="block text-sm font-bold mb-1 text-slate-700">เพดานประกันสังคม (หักสูงสุด)</label><input name="sso_max" id="set-sso-max" type="number" class="form-control"></div><div><label class="block text-sm font-bold mb-1 text-slate-700">เงินเดือนสูงสุดคำนวณ SSO (บาท)</label><input name="sso_max_base" id="set-sso-max-base" type="number" class="form-control" placeholder="15000"></div></div></div>
                     <button type="submit" class="bg-slate-800 text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:bg-slate-700 transition w-full md:w-auto">บันทึกการตั้งค่า</button>
                 </form>
             </div>
@@ -650,7 +680,7 @@
         <div class="bg-white w-full max-w-xl rounded-2xl overflow-hidden shadow-2xl relative"><div class="bg-slate-800 p-4 flex justify-between items-center text-white"><h3 class="font-bold text-lg"><i class="fa-solid fa-file-invoice mr-2"></i> เอกสาร</h3><button onclick="document.getElementById('payslipModal').classList.add('hidden')" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition"><i class="fa-solid fa-times"></i></button></div><div class="p-0 bg-slate-100 overflow-y-auto max-h-[80dvh]" id="payslip-modal-body"><div id="payslip-content" class="w-full"></div></div><div class="p-4 bg-slate-50 flex justify-end border-t"><button onclick="printSingleSlip()" class="bg-blue-600 text-white px-5 py-2.5 rounded-xl font-bold shadow hover:bg-blue-700 transition flex items-center"><i class="fa-solid fa-print mr-2"></i> พิมพ์ / ดาวน์โหลด</button></div></div>
     </div>
 
-    <!-- Hidden containers for old code compatibility (some might still be referenced by old logic logic, keeping them empty) -->
+    <!-- Hidden containers for old code compatibility -->
     <div id="print-all-container" style="display: none;"></div>
     <div id="pdf-report-container" style="display: none;"></div>
     <div id="trip-print-container" style="display: none;"></div>
@@ -666,7 +696,6 @@
             const monthNames = ["", "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
             const monthLabel = `${monthNames[m]} ${y}`;
 
-            // Re-calculate the data specifically for the PDF generator (mirroring the logic in filterTripReport)
             let startDate = 1, endDate = 15;
             let lastDayOfMonth = new Date(y, m, 0).getDate();
             if (p === 2) { startDate = 16; endDate = lastDayOfMonth; }
@@ -680,7 +709,6 @@
                 emps = emps.filter(e => e.pos && (e.pos.includes('สิบล้อ') || e.pos.includes('Truck')));
             }
 
-            // Prepare Table Body for PDF
             let pdfData = [];
             emps.forEach(emp => {
                 let row = [`${emp.prefix}${emp.fname} ${emp.lname}`];
@@ -704,13 +732,11 @@
                 pdfData.push(row);
             });
 
-            // Call Service (เพิ่มพารามิเตอร์ p เข้าไป)
             PDFService.generateTripReport(pdfData, type.toUpperCase(), monthLabel, p);
         };
 
         window.printAllSlips = () => {
              if(filteredReportData.length === 0) return Swal.fire('ไม่มีข้อมูล', 'กรุณากดค้นหาก่อน', 'warning');
-             // Convert raw data to PDF Service format
              const dataForPdf = filteredReportData.map(d => ({
                  name: d.name,
                  pos: d.pos,
@@ -723,7 +749,7 @@
                  sso: d.sso,
                  tax: d.tax,
                  advance: d.advance,
-                 student_loan: d.student_loan || 0, // เพิ่ม กยศ
+                 student_loan: d.student_loan || 0,
                  water: d.water,
                  electricity: d.electricity,
                  net: d.net,
@@ -734,15 +760,12 @@
         };
 
         window.printSingleSlip = () => {
-             // Retrieve data from current view or modal context. 
              if(window.currentSlipData) {
-                 // Wrap in array because generatePayslip expects an array
                  const data = { ...window.currentSlipData };
                  data.period = data.period + ""; 
                  data.totalDeduction = data.sso + data.tax + data.advance + data.water + data.electricity + (data.student_loan || 0);
                  PDFService.generatePayslip([data]);
              } else {
-                 // Fallback if not available
                  alert("Error: Data not found for PDF generation.");
              }
         };
@@ -751,20 +774,35 @@
              const p = appState.projects.find(x => x.id == projId); 
              if (!p) return;
              
-             // ดึงข้อมูลพนักงาน (ถ้าไม่มี ให้มีค่าว่าง)
-             const emp = appState.employees.find(e => e.id == p.emp_id) || { fname: '', lname: '', id: '', address: '', prefix: '' };
+             let empName, empAddress, empCardId;
+             if(p.is_external) {
+                 empName = p.ext_name || '';
+                 empAddress = p.ext_address || '';
+                 empCardId = p.ext_tax_id || '';
+             } else {
+                 const emp = appState.employees.find(e => e.id == p.emp_id) || { fname: '', lname: '', id: '', address: '', prefix: '' };
+                 empName = `${emp.prefix || ''}${emp.fname || ''} ${emp.lname || ''}`.trim();
+                 empAddress = emp.address || "";
+                 empCardId = emp.id || "";
+             }
              
-             // ส่งข้อมูลให้ PDFService.js ทั้ง 6 อย่าง ตามโครงสร้างใหม่
+             // รวมชื่อรายการสำหรับ PDF
+             let jobStr = p.job_name;
+             if (p.job_items && Array.isArray(p.job_items) && p.job_items.length > 0) {
+                 jobStr = p.job_items.map(i => `${i.name}`).join(', ');
+             }
+
              const receiptData = {
                  id: p.id,
                  date: p.date,
-                 empName: `${emp.prefix || ''}${emp.fname || ''} ${emp.lname || ''}`.trim(), // 1. ชื่อ
-                 empAddress: emp.address || "", // 2. ที่อยู่พนักงาน
-                 empCardId: emp.id || "", // 3. เลขบัตรประชาชน
-                 companyName: appState.settings.company_name || "", // 4. ชื่อบริษัท
-                 companyAddress: appState.settings.company_address || "", // 5. ที่อยู่บริษัท
-                 companyTaxId: appState.settings.tax_id || "", // 6. เลขผู้เสียภาษีบริษัท
-                 job_name: p.job_name,
+                 empName: empName,
+                 empAddress: empAddress,
+                 empCardId: empCardId,
+                 companyName: appState.settings.company_name || "",
+                 companyAddress: appState.settings.company_address || "",
+                 companyTaxId: appState.settings.tax_id || "",
+                 job_name: jobStr,
+                 job_items: p.job_items || [], // ส่งเผื่อ PDFService เวอร์ชั่นใหม่ใช้
                  amount: p.amount,
                  wht_rate: p.wht_rate,
                  tax: p.tax,
@@ -780,24 +818,25 @@
         };
 
         window.exportToPDF = () => {
-             // แก้ให้ส่งข้อมูล 16 คอลัมน์ ครบถ้วนตามตารางละเอียดที่กำหนดไว้
              const data = filteredReportData.map(d => [
-                 d.period, // 1. งวด
-                 d.month, // 2. เดือน
-                 d.year, // 3. ปี
-                 d.emp_id, // 4. เลขบัตร/รหัส
-                 d.name, // 5. ชื่อ-สกุล
-                 d.pos, // 6. ตำแหน่ง
-                 d.salary, // 7. เงินเดือน
-                 d.incentive, // 8. ค่าตอบแทน
-                 d.other, // 9. อื่นๆ
-                 (d.salary + d.incentive + d.other), // 10. รวมรับ
-                 d.sso, // 11. สปส
-                 d.advance, // 12. เบิก
-                 d.water, // 13. น้ำ
-                 d.electricity, // 14. ไฟ
-                 (d.sso + d.tax + d.advance + d.water + d.electricity + (d.student_loan||0)), // 15. รวมหัก
-                 d.net // 16. สุทธิ
+                 d.period, 
+                 d.month, 
+                 d.year, 
+                 d.emp_id, 
+                 d.name, 
+                 d.pos, 
+                 d.salary, 
+                 d.incentive, 
+                 d.other, 
+                 (d.salary + d.incentive + d.other), 
+                 d.sso, 
+                 d.tax,
+                 d.advance, 
+                 (d.student_loan||0),
+                 d.water, 
+                 d.electricity, 
+                 (d.sso + d.tax + d.advance + d.water + d.electricity + (d.student_loan||0)), 
+                 d.net 
              ]);
              PDFService.generateSalarySummary(data);
         };
@@ -805,8 +844,8 @@
         // ============================================================
         // 1. CONFIGURATION & SUPABASE SETUP
         // ============================================================
-        const SUPABASE_URL = 'https://qtbdosctphibsyimkyvt.supabase.co'; // ใส่ URL ของคุณ
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF0YmRvc2N0cGhpYnN5aW1reXZ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzExMzUyMDksImV4cCI6MjA4NjcxMTIwOX0.56bsWDqxR24s9kBSbVRT5ucdEjiS6eDd7ARXsqz2tUo'; // ใส่ Key ของคุณ
+        const SUPABASE_URL = 'https://qtbdosctphibsyimkyvt.supabase.co'; 
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF0YmRvc2N0cGhpYnN5aW1reXZ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzExMzUyMDksImV4cCI6MjA4NjcxMTIwOX0.56bsWDqxR24s9kBSbVRT5ucdEjiS6eDd7ARXsqz2tUo'; 
         
         let db;
         try {
@@ -817,7 +856,7 @@
             }
         } catch(e) { console.error("Supabase Init Error", e); }
 
-        const TEAM_PIN = "8888"; // รหัสเข้าใช้งาน
+        const TEAM_PIN = "8888";
 
         // ============================================================
         // 2. GLOBAL STATE
@@ -830,7 +869,7 @@
         let empChart = null, salaryChart = null;
         window.filteredReportData = []; 
         window.currentEmpFilter = 'All';
-        window.currentSlipData = null; // Store for PDF generation
+        window.currentSlipData = null; 
         window.selectedDailyEmpId = null;
 
         // ============================================================
@@ -865,7 +904,6 @@
             document.getElementById('c-date').valueAsDate = d; 
             document.getElementById('l-date').valueAsDate = d;
             
-            // Set init nav states
             appState.nav.cMonth = d.getMonth() + 1;
             appState.nav.cYear = d.getFullYear();
             appState.nav.lMonth = d.getMonth() + 1;
@@ -910,16 +948,14 @@
             renderPayrollEmpSelect();
             initDateDropdowns(); 
             
-            // Populate Settings
             const s = appState.settings;
             if(s) {
                 document.getElementById('set-company').value = s.company_name || '';
                 document.getElementById('set-tax').value = s.tax_id || '';
                 document.getElementById('set-address').value = s.company_address || '';
-                document.getElementById('set-inc-cat').value = s.acc_income_cats || '';
-                document.getElementById('set-exp-cat').value = s.acc_expense_cats || '';
                 document.getElementById('set-sso').value = s.sso_rate || 5;
                 document.getElementById('set-sso-max').value = s.sso_max || 750;
+                document.getElementById('set-sso-max-base').value = s.sso_max_base || 15000;
             }
             
             renderContractorPage();
@@ -1026,13 +1062,12 @@
         window.handleDailyDateChange = function() {
             filterDailyList();
             if(window.selectedDailyEmpId) {
-                selectDailyEmp(); // Refresh form data for new date
+                selectDailyEmp();
                 updateEmpStatsCard();
             }
         }
 
         window.switchDailyTab = function(tabName, btn) {
-            // Update buttons
             document.querySelectorAll('.daily-tab-btn').forEach(b => {
                 b.classList.remove('bg-white', 'text-blue-600', 'shadow-sm');
                 b.classList.add('text-slate-500');
@@ -1040,7 +1075,6 @@
             btn.classList.remove('text-slate-500');
             btn.classList.add('bg-white', 'text-blue-600', 'shadow-sm');
 
-            // Update content sections
             document.getElementById('d-sec-shift').classList.add('hidden');
             document.getElementById('d-sec-ot').classList.add('hidden');
             document.getElementById('d-sec-' + tabName).classList.remove('hidden');
@@ -1195,18 +1229,24 @@
                 const form = document.getElementById('daily-form-area'); 
                 const btn = document.getElementById('btn-save-daily'); 
                 const posDisp = document.getElementById('d-pos-display'); 
+                const empNameEl = document.getElementById('d-selected-emp-name');
                 
                 if(!empId) { 
                     form.classList.add('opacity-50', 'pointer-events-none'); 
                     btn.disabled = true; posDisp.innerText = ''; 
                     document.getElementById('emp-stats-area').classList.add('hidden'); 
+                    empNameEl.classList.add('hidden');
                     resetDailyForm(false); return; 
                 } 
                 
                 form.classList.remove('opacity-50', 'pointer-events-none'); 
                 btn.disabled = false; 
                 const emp = appState.employees.find(e => e.id == empId); 
-                if(emp) posDisp.innerText = `ตำแหน่ง: ${emp.pos}`; 
+                if(emp) {
+                    posDisp.innerText = `ตำแหน่ง: ${emp.pos}`; 
+                    empNameEl.innerText = `กำลังบันทึกข้อมูลของ: ${emp.prefix}${emp.fname} ${emp.lname}`;
+                    empNameEl.classList.remove('hidden');
+                }
                 updateEmpStatsCard(); 
                 
                 const date = document.getElementById('d-date').value; 
@@ -1270,6 +1310,7 @@
                 window.selectedDailyEmpId = null;
                 document.getElementById('d-emp').value = ''; 
                 renderDailyEmpList(document.getElementById('d-emp-search').value);
+                document.getElementById('d-selected-emp-name').classList.add('hidden');
             }
             document.getElementById('d-record-id').value = ''; 
             document.getElementById('d-wage').value = ''; 
@@ -1459,13 +1500,14 @@
             document.getElementById('inp-p-incentive').value = ot + bonus + otherDaily; 
             document.getElementById('inp-p-advance').value = deductAdv; 
             
-            // Logic หัก 5% (สูงสุด 750 บาท) เฉพาะงวดที่ 1
             let sso = 0; 
             if(period === 1) { 
-                const ssoRate = parseFloat(appState.settings.sso_rate || 5) / 100; // stored as 5
+                const ssoRate = parseFloat(appState.settings.sso_rate || 5) / 100;
                 const ssoMax = parseFloat(appState.settings.sso_max || 750);
+                const ssoMaxBase = parseFloat(appState.settings.sso_max_base || 15000);
                 let base = emp.salary; 
-                if(base > 15000) base = 15000; if(base < 1650) base = 1650; 
+                if(base > ssoMaxBase) base = ssoMaxBase; 
+                if(base < 1650) base = 1650; 
                 sso = Math.floor(base * ssoRate); 
                 if(sso > ssoMax) sso = ssoMax;
             } 
@@ -1572,9 +1614,75 @@
         // 9. CONTRACTOR LOGIC
         // ============================================================
         window.renderContractorPage = function() { 
-            const s = document.getElementById('c-emp'); s.innerHTML = '<option value="">-- เลือกผู้รับเหมา --</option>'; 
+            const s = document.getElementById('c-emp'); s.innerHTML = '<option value="">-- เลือกผู้รับเหมา/พนักงาน --</option>'; 
             appState.employees.filter(e => e.type === 'Contractor' && e.status === 'Active').forEach(e => { s.innerHTML += `<option value="${e.id}">${e.prefix} ${e.fname} ${e.lname}</option>`; }); 
             renderContractorList(); 
+        }
+
+        window.toggleContractorType = function() {
+            const isExt = document.querySelector('input[name="c-type"]:checked').value === 'external';
+            document.getElementById('c-internal-sec').classList.toggle('hidden', isExt);
+            document.getElementById('c-external-sec').classList.toggle('hidden', !isExt);
+            if(isExt) {
+                document.getElementById('c-emp').value = '';
+                document.getElementById('c-job-container').innerHTML = '';
+                addContractorJobRow();
+            } else {
+                document.getElementById('c-ext-name').value = '';
+                document.getElementById('c-ext-address').value = '';
+                document.getElementById('c-ext-tax').value = '';
+                document.getElementById('c-job-container').innerHTML = '';
+                addContractorJobRow();
+            }
+        }
+
+        window.addContractorJobRow = function(name='', amount='') {
+            const container = document.getElementById('c-job-container');
+            if(container.children.length >= 4) return;
+            const div = document.createElement('div');
+            div.className = 'flex gap-2 items-center c-job-row';
+            div.innerHTML = `
+                <input type="text" placeholder="ชื่อรายการ/รายละเอียด" class="form-control h-10 c-job-name flex-1 text-sm" value="${name}">
+                <input type="number" placeholder="ยอดเงิน" class="form-control h-10 c-job-amount w-28 text-sm" value="${amount}" oninput="calcContractorTotal()">
+                <button type="button" onclick="this.parentElement.remove(); calcContractorTotal();" class="text-red-400 hover:text-red-600 p-2"><i class="fa-solid fa-times"></i></button>
+            `;
+            container.appendChild(div);
+            calcContractorTotal();
+        }
+
+        window.calcContractorTotal = function() {
+            let total = 0;
+            document.querySelectorAll('.c-job-amount').forEach(el => {
+                total += parseFloat(el.value) || 0;
+            });
+            document.getElementById('c-amount').value = total;
+            calcWHT();
+        }
+
+        window.checkContractorAutoFill = function() {
+            const isExt = document.querySelector('input[name="c-type"]:checked').value === 'external';
+            if(isExt) return;
+
+            const empId = document.getElementById('c-emp').value;
+            if(!empId) return;
+            const dateStr = document.getElementById('c-date').value;
+            const d = new Date(dateStr);
+            const m = d.getMonth() + 1;
+            const y = d.getFullYear();
+            
+            const records = appState.dailyRecords.filter(r => {
+                const rd = new Date(r.date);
+                return r.emp_id == empId && rd.getFullYear() == y && (rd.getMonth() + 1) == m;
+            });
+            
+            const totalTrip = records.reduce((s, r) => s + (r.trip_bonus || 0), 0);
+            const totalOt = records.reduce((s, r) => s + (r.ot_total || 0), 0);
+            
+            if(totalTrip > 0 || totalOt > 0) {
+                document.getElementById('c-job-container').innerHTML = '';
+                if(totalTrip > 0) addContractorJobRow('ค่าเที่ยวสะสมประจำเดือน', totalTrip);
+                if(totalOt > 0) addContractorJobRow('ค่าล่วงเวลา/OT', totalOt);
+            }
         }
 
         window.calcWHT = function() { 
@@ -1586,18 +1694,40 @@
         }
 
         window.saveContractorJob = async function() { 
+            const isExt = document.querySelector('input[name="c-type"]:checked').value === 'external';
             const empId = document.getElementById('c-emp').value; 
-            if(!empId) return Swal.fire('กรุณาเลือกผู้รับเหมา', '', 'warning'); 
+            
+            if(!isExt && !empId) return Swal.fire('กรุณาเลือกผู้รับเหมา', '', 'warning'); 
+            if(isExt && !document.getElementById('c-ext-name').value.trim()) return Swal.fire('กรุณาระบุชื่อผู้รับเงิน', '', 'warning');
             
             const amount = parseFloat(document.getElementById('c-amount').value) || 0; 
+            if(amount <= 0) return Swal.fire('กรุณาเพิ่มรายการค่าจ้าง', '', 'warning');
+
             const rate = parseFloat(document.querySelector('input[name="c-wht"]:checked').value); 
             const tax = amount * (rate / 100); 
+            
+            // ดึงข้อมูลรายการย่อย
+            let items = [];
+            let jobNameStr = [];
+            document.querySelectorAll('.c-job-row').forEach(row => {
+                const n = row.querySelector('.c-job-name').value.trim();
+                const v = parseFloat(row.querySelector('.c-job-amount').value) || 0;
+                if(n && v > 0) {
+                    items.push({name: n, amount: v});
+                    jobNameStr.push(n);
+                }
+            });
             
             const d = { 
                 id: document.getElementById('c-id').value || 'PRJ-'+Date.now(), 
                 date: document.getElementById('c-date').value, 
-                emp_id: empId, 
-                job_name: document.getElementById('c-job').value, 
+                is_external: isExt,
+                emp_id: isExt ? null : empId, 
+                ext_name: isExt ? document.getElementById('c-ext-name').value.trim() : null,
+                ext_address: isExt ? document.getElementById('c-ext-address').value.trim() : null,
+                ext_tax_id: isExt ? document.getElementById('c-ext-tax').value.trim() : null,
+                job_name: jobNameStr.join(', '), 
+                job_items: items,
                 amount: amount, 
                 wht_rate: rate, 
                 tax: tax, 
@@ -1631,27 +1761,66 @@
             document.getElementById('con-stat-total').innerText = list.reduce((s,i)=>s+i.amount,0).toLocaleString(); 
             document.getElementById('con-stat-tax').innerText = list.reduce((s,i)=>s+i.tax,0).toLocaleString(); 
             document.getElementById('c-list').innerHTML = list.map(p => { 
-                const emp = appState.employees.find(e => e.id == p.emp_id) || {fname:'Unknown', lname:''}; 
-                return `<tr class="hover:bg-slate-50 border-b"><td class="p-4 text-xs">${p.date}</td><td class="p-4"><div class="font-bold text-slate-700">${emp.fname} ${emp.lname}</div><div class="text-xs text-slate-500">${p.job_name}</div></td><td class="p-4 text-right">${p.amount.toLocaleString()}</td><td class="p-4 text-right text-red-500">${p.tax.toLocaleString()}</td><td class="p-4 text-right font-bold text-green-700">${p.net.toLocaleString()}</td><td class="p-4 text-center flex justify-center gap-1"><button onclick="viewProject('${p.id}')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600"><i class="fa-solid fa-eye"></i></button><button onclick="printPaymentVoucher('${p.id}')" class="w-8 h-8 rounded-full bg-slate-800 text-white"><i class="fa-solid fa-print"></i></button><button onclick="editProject('${p.id}')" class="w-8 h-8 rounded-full bg-blue-100 text-blue-600"><i class="fa-solid fa-pen"></i></button><button onclick="delProject('${p.id}')" class="w-8 h-8 rounded-full bg-red-100 text-red-600"><i class="fa-solid fa-trash"></i></button></td></tr>`; 
+                let name = '-';
+                if(p.is_external) {
+                    name = p.ext_name;
+                } else {
+                    const emp = appState.employees.find(e => e.id == p.emp_id);
+                    if(emp) name = `${emp.fname} ${emp.lname}`;
+                }
+                return `<tr class="hover:bg-slate-50 border-b"><td class="p-4 text-xs">${p.date}</td><td class="p-4"><div class="font-bold text-slate-700">${name} ${p.is_external ? '<span class="text-[10px] bg-slate-200 text-slate-500 px-1 rounded">ภายนอก</span>' : ''}</div><div class="text-xs text-slate-500 truncate max-w-[200px]">${p.job_name}</div></td><td class="p-4 text-right">${p.amount.toLocaleString()}</td><td class="p-4 text-right text-red-500">${p.tax.toLocaleString()}</td><td class="p-4 text-right font-bold text-green-700">${p.net.toLocaleString()}</td><td class="p-4 text-center flex justify-center gap-1"><button onclick="viewProject('${p.id}')" class="w-8 h-8 rounded-full bg-slate-100 text-slate-600"><i class="fa-solid fa-eye"></i></button><button onclick="printPaymentVoucher('${p.id}')" class="w-8 h-8 rounded-full bg-slate-800 text-white"><i class="fa-solid fa-print"></i></button><button onclick="editProject('${p.id}')" class="w-8 h-8 rounded-full bg-blue-100 text-blue-600"><i class="fa-solid fa-pen"></i></button><button onclick="delProject('${p.id}')" class="w-8 h-8 rounded-full bg-red-100 text-red-600"><i class="fa-solid fa-trash"></i></button></td></tr>`; 
             }).join(''); 
         }
 
         window.viewProject = function(id) { 
             const p = appState.projects.find(x => x.id == id); if(!p) return; 
-            const emp = appState.employees.find(e => e.id == p.emp_id) || {fname:'Unknown', lname:''}; 
-            Swal.fire({ title: 'รายละเอียดงาน', html: `<div class="text-left space-y-2 text-sm"><div class="font-bold border-b pb-1">ข้อมูลงาน</div><div class="flex justify-between"><span>วันที่:</span><span>${p.date}</span></div><div class="flex justify-between"><span>ผู้รับเหมา:</span><span>${emp.fname} ${emp.lname}</span></div><div class="flex justify-between"><span>ชื่องาน:</span><span>${p.job_name}</span></div><div class="font-bold border-b pb-1 mt-3">การจ่ายเงิน</div><div class="flex justify-between"><span>ค่าจ้าง:</span><span>${p.amount.toLocaleString()}</span></div><div class="flex justify-between text-red-500"><span>หัก ณ ที่จ่าย (${p.wht_rate}%):</span><span>${p.tax.toLocaleString()}</span></div><div class="flex justify-between font-bold text-green-600 text-lg"><span>สุทธิ:</span><span>${p.net.toLocaleString()}</span></div><div class="flex justify-between mt-2 text-xs text-slate-400"><span>วันที่จ่าย:</span><span>${p.payment_date||'-'}</span></div></div>`, showCloseButton: true, showConfirmButton: false }); 
+            let name = '-';
+            if(p.is_external) name = p.ext_name;
+            else { const emp = appState.employees.find(e => e.id == p.emp_id); if(emp) name = `${emp.fname} ${emp.lname}`; }
+            
+            let itemsHtml = '';
+            if(p.job_items && p.job_items.length > 0) {
+                itemsHtml = p.job_items.map(i => `<div class="flex justify-between text-xs text-slate-600 ml-2 border-l-2 pl-2 border-slate-200"><span>- ${i.name}</span><span>${i.amount.toLocaleString()}</span></div>`).join('');
+            }
+            
+            Swal.fire({ title: 'รายละเอียดงาน', html: `<div class="text-left space-y-2 text-sm"><div class="font-bold border-b pb-1">ข้อมูลงาน</div><div class="flex justify-between"><span>วันที่:</span><span>${p.date}</span></div><div class="flex justify-between"><span>ผู้รับเงิน:</span><span>${name}</span></div><div class="font-bold border-b pb-1 mt-3">รายการ</div>${itemsHtml}<div class="font-bold border-b pb-1 mt-3">การจ่ายเงิน</div><div class="flex justify-between"><span>รวมค่าจ้าง:</span><span>${p.amount.toLocaleString()}</span></div><div class="flex justify-between text-red-500"><span>หัก ณ ที่จ่าย (${p.wht_rate}%):</span><span>${p.tax.toLocaleString()}</span></div><div class="flex justify-between font-bold text-green-600 text-lg"><span>สุทธิ:</span><span>${p.net.toLocaleString()}</span></div><div class="flex justify-between mt-2 text-xs text-slate-400"><span>วันที่จ่าย:</span><span>${p.payment_date||'-'}</span></div></div>`, showCloseButton: true, showConfirmButton: false }); 
         }
 
-        window.resetContractorForm = function() { document.getElementById('c-id').value = ''; document.getElementById('c-emp').value = ''; document.getElementById('c-job').value = ''; document.getElementById('c-amount').value = ''; document.querySelector('input[value="0"]').checked = true; calcWHT(); }
+        window.resetContractorForm = function() { 
+            document.getElementById('c-id').value = ''; 
+            document.querySelector('input[name="c-type"][value="internal"]').checked = true;
+            toggleContractorType();
+            document.getElementById('c-job-container').innerHTML = '';
+            addContractorJobRow();
+            document.getElementById('c-amount').value = ''; 
+            document.querySelector('input[name="c-wht"][value="0"]').checked = true; 
+            calcWHT(); 
+        }
 
         window.editProject = function(id) { 
             const p = appState.projects.find(x => x.id == id); 
             document.getElementById('c-id').value = p.id; 
             document.getElementById('c-date').value = p.date; 
-            document.getElementById('c-emp').value = p.emp_id; 
-            document.getElementById('c-job').value = p.job_name; 
-            document.getElementById('c-amount').value = p.amount; 
             document.getElementById('c-pay-date').value = p.payment_date; 
+            
+            if(p.is_external) {
+                document.querySelector('input[name="c-type"][value="external"]').checked = true;
+                document.getElementById('c-ext-name').value = p.ext_name || '';
+                document.getElementById('c-ext-address').value = p.ext_address || '';
+                document.getElementById('c-ext-tax').value = p.ext_tax_id || '';
+            } else {
+                document.querySelector('input[name="c-type"][value="internal"]').checked = true;
+                document.getElementById('c-emp').value = p.emp_id;
+            }
+            toggleContractorType();
+            
+            document.getElementById('c-job-container').innerHTML = '';
+            if(p.job_items && p.job_items.length > 0) {
+                p.job_items.forEach(i => addContractorJobRow(i.name, i.amount));
+            } else {
+                addContractorJobRow(p.job_name, p.amount);
+            }
+            
             const radios = document.getElementsByName('c-wht'); 
             for(let r of radios) r.checked = (parseFloat(r.value) == p.wht_rate); 
             calcWHT(); 
@@ -1673,15 +1842,43 @@
         // 10. LEDGER LOGIC
         // ============================================================
         window.renderLedgerPage = function() { 
-            const cats = (appState.settings.acc_income_cats + ',' + appState.settings.acc_expense_cats).split(',').filter(x=>x); 
-            const s = document.getElementById('l-cat'); s.innerHTML = '<option value="">-- เลือกหมวดหมู่ --</option>'; 
-            cats.forEach(c => s.innerHTML += `<option value="${c.trim()}">${c.trim()}</option>`); 
+            const uniqueCats = new Set();
+            appState.ledger.forEach(l => { if(l.category) uniqueCats.add(l.category); });
+            
+            const s = document.getElementById('l-cat'); 
+            s.innerHTML = '<option value="">-- เลือกหมวดหมู่ --</option>'; 
+            uniqueCats.forEach(c => s.innerHTML += `<option value="${c}">${c}</option>`); 
+            s.innerHTML += `<option value="ADD_NEW" class="font-bold text-blue-600">+ เพิ่มหมวดหมู่ใหม่...</option>`;
             
             const inc = appState.ledger.reduce((s,i)=>s+(i.income||0), 0); 
             const exp = appState.ledger.reduce((s,i)=>s+(i.expense||0), 0); 
             document.getElementById('ldg-balance').innerText = (inc - exp).toLocaleString(undefined, {minimumFractionDigits:2}); 
             renderLedgerList(); 
         }
+
+        // Handle Add New Category
+        document.getElementById('l-cat').addEventListener('change', async function() {
+            if(this.value === 'ADD_NEW') {
+                const { value: newCat } = await Swal.fire({
+                    title: 'เพิ่มหมวดหมู่ใหม่',
+                    input: 'text',
+                    inputPlaceholder: 'กรอกชื่อหมวดหมู่ที่นี่...',
+                    showCancelButton: true,
+                    confirmButtonText: 'เพิ่ม',
+                    cancelButtonText: 'ยกเลิก',
+                    inputValidator: (val) => { if (!val) return 'กรุณากรอกชื่อหมวดหมู่'; }
+                });
+                if(newCat) {
+                    const opt = document.createElement('option');
+                    opt.value = newCat;
+                    opt.text = newCat;
+                    this.insertBefore(opt, this.lastElementChild); // แทรกก่อนปุ่ม "เพิ่ม"
+                    this.value = newCat;
+                } else {
+                    this.value = ''; // Reset if cancelled
+                }
+            }
+        });
 
         window.saveLedger = async function() { 
             const d = { 
@@ -1714,6 +1911,7 @@
             const m = appState.nav.lMonth; const y = appState.nav.lYear;
             const list = appState.ledger.filter(l => { const d = new Date(l.date); return d.getMonth()+1 === m && d.getFullYear() === y; }).sort((a,b) => new Date(b.date) - new Date(a.date));
             
+            document.getElementById('l-list-month').innerText = `${m}/${y}`;
             let sIn=0, sEx=0; 
             document.getElementById('l-list').innerHTML = list.map(l => { 
                 sIn += l.income; sEx += l.expense; 
@@ -1730,7 +1928,18 @@
             document.getElementById('l-id').value = l.id;
             document.getElementById('l-date').value = l.date;
             document.getElementById('l-desc').value = l.description;
-            document.getElementById('l-cat').value = l.category;
+            
+            // Check if category exists in dropdown, if not add it temporarily
+            const catSelect = document.getElementById('l-cat');
+            let found = false;
+            for(let opt of catSelect.options) { if(opt.value === l.category) found = true; }
+            if(!found && l.category) {
+                const opt = document.createElement('option');
+                opt.value = l.category; opt.text = l.category;
+                catSelect.insertBefore(opt, catSelect.lastElementChild);
+            }
+            catSelect.value = l.category || '';
+            
             document.getElementById('l-income').value = l.income > 0 ? l.income : '';
             document.getElementById('l-expense').value = l.expense > 0 ? l.expense : '';
             window.scrollTo({top:0,behavior:'smooth'});
@@ -1777,7 +1986,12 @@
         window.filterContractorReport = function() { 
             const m = parseInt(document.getElementById('rpt-c-month').value); const y = parseInt(document.getElementById('rpt-c-year').value); 
             const list = appState.projects.filter(p => { const d = new Date(p.date); return d.getMonth()+1 === m && d.getFullYear() === y; }); 
-            document.getElementById('rpt-c-list').innerHTML = list.map(p => { const emp = appState.employees.find(e => e.id == p.emp_id) || {fname:'Unknown', lname:''}; return `<tr class="hover:bg-slate-50 border-b"><td class="p-4 text-xs">${p.date}</td><td class="p-4"><div class="font-bold text-slate-700">${emp.fname} ${emp.lname}</div><div class="text-xs text-slate-500">${p.job_name}</div></td><td class="p-4 text-right">${p.amount.toLocaleString()}</td><td class="p-4 text-right text-red-500">${p.tax.toLocaleString()}</td><td class="p-4 text-right font-bold text-green-700">${p.net.toLocaleString()}</td><td class="p-4 text-center"><button onclick="printPaymentVoucher('${p.id}')" class="bg-slate-800 text-white px-3 py-1 rounded text-xs">พิมพ์</button></td></tr>`; }).join(''); 
+            document.getElementById('rpt-c-list').innerHTML = list.map(p => { 
+                let name = '-';
+                if(p.is_external) name = p.ext_name;
+                else { const emp = appState.employees.find(e => e.id == p.emp_id); if(emp) name = `${emp.fname} ${emp.lname}`; }
+                return `<tr class="hover:bg-slate-50 border-b"><td class="p-4 text-xs">${p.date}</td><td class="p-4"><div class="font-bold text-slate-700">${name}</div><div class="text-xs text-slate-500 truncate max-w-[150px]">${p.job_name}</div></td><td class="p-4 text-right">${p.amount.toLocaleString()}</td><td class="p-4 text-right text-red-500">${p.tax.toLocaleString()}</td><td class="p-4 text-right font-bold text-green-700">${p.net.toLocaleString()}</td><td class="p-4 text-center"><button onclick="printPaymentVoucher('${p.id}')" class="bg-slate-800 text-white px-3 py-1 rounded text-xs">พิมพ์</button></td></tr>`; 
+            }).join(''); 
         }
 
         window.filterLedgerReport = function() { 
@@ -1796,29 +2010,23 @@
             const p = parseInt(document.getElementById('rpt-t-period').value);
             const type = document.querySelector('input[name="rpt-t-type"]:checked').value;
             
-            // 1. Determine Date Range
             let startDate = 1, endDate = 15;
             let lastDayOfMonth = new Date(y, m, 0).getDate();
             if (p === 2) { startDate = 16; endDate = lastDayOfMonth; }
             
-            // 2. Filter Employees
             let emps = appState.employees.filter(e => e.status !== 'Resigned');
-            
-            // Filter Logic
             if (type === 'All') {
                 emps = emps.filter(e => e.pos && (e.pos.includes('แม็คโคร') || e.pos.includes('Macro') || e.pos.includes('สิบล้อ') || e.pos.includes('Truck')));
             }
             else if (type === 'Macro') emps = emps.filter(e => e.pos && (e.pos.includes('แม็คโคร') || e.pos.includes('Macro')));
             else if (type === 'Truck') emps = emps.filter(e => e.pos && (e.pos.includes('สิบล้อ') || e.pos.includes('Truck')));
             
-            // 3. Build Table Header
             let headerHTML = `<th class="p-2 border bg-slate-100 text-left min-w-[150px]">ชื่อพนักงาน</th>`;
             for(let d = startDate; d <= endDate; d++) {
                 headerHTML += `<th class="p-2 border bg-slate-100 text-center w-10 text-xs">${d}</th>`;
             }
             headerHTML += `<th class="p-2 border bg-green-50 text-center w-16 text-xs font-bold">รวม</th>`;
             
-            // 4. Build Table Body
             let bodyHTML = '';
             let dailyTotals = {}; 
             for(let d = startDate; d <= endDate; d++) dailyTotals[d] = 0;
@@ -1843,7 +2051,6 @@
                 bodyHTML += `<tr>${rowHTML}</tr>`;
             });
             
-            // 5. Build Footer (Grand Total)
             let footerHTML = `<td class="p-2 border bg-slate-200 font-bold text-right text-xs">รวมรายวัน</td>`;
             let grandTotal = 0;
             for(let d = startDate; d <= endDate; d++) {
@@ -1869,76 +2076,16 @@
             document.getElementById('trip-export-area').classList.remove('hidden');
         }
 
-        window.generateSlipHTML = function(data) {
-             const income = data.salary + data.incentive + data.other;
-             const deduct = data.sso + data.tax + data.advance + data.water + data.electricity + (data.student_loan||0);
-             // Store current data for Single Slip Print
-             window.currentSlipData = data;
-
-             const html = `
-             <div class="bg-white p-8 max-w-[800px] mx-auto text-slate-800" style="font-family: 'Prompt', sans-serif;">
-                <div class="flex justify-between items-start mb-6 border-b pb-4">
-                    <div class="flex items-center">
-                        <div class="w-12 h-12 bg-slate-800 rounded-lg flex items-center justify-center text-white text-xl mr-4"><i class="fa-solid fa-building"></i></div>
-                        <div>
-                            <h2 class="text-xl font-bold">${appState.settings.company_name}</h2>
-                            <p class="text-xs text-slate-500 mt-1 max-w-[250px]">${appState.settings.company_address}</p>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-sm font-bold bg-slate-100 px-3 py-1 rounded-lg inline-block mb-1">PAYSLIP / ใบแจ้งเงินเดือน</div>
-                        <div class="text-xs text-slate-500">งวดที่ ${data.period} ประจำเดือน ${data.month}/${data.year}</div>
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 gap-4 mb-6 text-sm">
-                    <div><span class="text-slate-400 block text-xs">พนักงาน</span><span class="font-bold text-lg">${data.name}</span></div>
-                    <div class="text-right"><span class="text-slate-400 block text-xs">ตำแหน่ง</span><span class="font-bold">${data.pos}</span></div>
-                </div>
-                <div class="grid grid-cols-2 gap-8 mb-6">
-                    <div>
-                        <div class="font-bold text-green-700 border-b border-green-100 pb-2 mb-2">รายได้ (Income)</div>
-                        <div class="flex justify-between text-sm mb-1"><span>เงินเดือน</span><span>${data.salary.toLocaleString()}</span></div>
-                        <div class="flex justify-between text-sm mb-1"><span>ค่าล่วงเวลา/เบี้ยเลี้ยง</span><span>${data.incentive.toLocaleString()}</span></div>
-                        <div class="flex justify-between text-sm mb-1"><span>อื่นๆ</span><span>${data.other.toLocaleString()}</span></div>
-                        <div class="flex justify-between text-sm mt-2 pt-2 border-t font-bold"><span>รวมรายได้</span><span>${income.toLocaleString()}</span></div>
-                    </div>
-                    <div>
-                        <div class="font-bold text-red-700 border-b border-red-100 pb-2 mb-2">รายการหัก (Deduction)</div>
-                        <div class="flex justify-between text-sm mb-1"><span>ประกันสังคม</span><span>${data.sso.toLocaleString()}</span></div>
-                        <div class="flex justify-between text-sm mb-1"><span>ภาษี</span><span>${data.tax.toLocaleString()}</span></div>
-                        <div class="flex justify-between text-sm mb-1"><span>เบิกล่วงหน้า</span><span>${data.advance.toLocaleString()}</span></div>
-                        <div class="flex justify-between text-sm mb-1"><span>กยศ.</span><span>${(data.student_loan||0).toLocaleString()}</span></div>
-                        <div class="flex justify-between text-sm mb-1"><span>ค่าน้ำ/ไฟ</span><span>${(data.water+data.electricity).toLocaleString()}</span></div>
-                        <div class="flex justify-between text-sm mt-2 pt-2 border-t font-bold"><span>รวมหัก</span><span>${deduct.toLocaleString()}</span></div>
-                    </div>
-                </div>
-                <div class="bg-slate-50 rounded-xl p-4 flex justify-between items-center border border-slate-200">
-                    <div class="text-xs text-slate-500">โอนเข้าบัญชี: ${data.bank}<br>วันที่จ่าย: ${new Date().toLocaleDateString('th-TH')}</div>
-                    <div class="text-right">
-                        <div class="text-xs text-slate-400 uppercase font-bold">Net Pay</div>
-                        <div class="text-3xl font-bold text-slate-800">${data.net.toLocaleString()} <span class="text-sm font-normal text-slate-500">THB</span></div>
-                    </div>
-                </div>
-             </div>`;
-             document.getElementById('payslip-content').innerHTML = html;
-        }
-
-         // ==========================================
-        // ฟังก์ชันส่งออก Excel
-        // ==========================================
         window.exportToExcel = function() {
-            // 1. ตรวจสอบข้อมูล
             if(!filteredReportData || filteredReportData.length === 0) {
                 return Swal.fire('ไม่มีข้อมูล', 'กรุณากดปุ่ม "ค้นหา" เพื่อดึงข้อมูลก่อนส่งออกครับ', 'warning');
             }
 
-            // 2. ดึงข้อมูลส่วนหัว (บริษัท, ที่อยู่, ฯลฯ) จากการตั้งค่า
             const settings = appState.settings || {};
             const companyName = settings.company_name || 'บริษัท (ไม่ได้ระบุชื่อ)';
             const address = settings.company_address || '';
             const taxId = settings.tax_id ? `เลขประจำตัวผู้เสียภาษี: ${settings.tax_id}` : '';
 
-            // 3. ดึงข้อมูลงวด/เดือน/ปี ที่เลือกอยู่หน้าเว็บ
             const mSelect = document.getElementById('rpt-month');
             const monthText = mSelect.options[mSelect.selectedIndex].text;
             const yearText = document.getElementById('rpt-year').value;
@@ -1947,58 +2094,52 @@
 
             const reportTitle = `รายงานสรุปเงินเดือน ประจำเดือน ${monthText} ปี ${yearText} (${periodText})`;
 
-            // 4. สร้างโครงสร้างข้อมูลสำหรับ Excel (Array of Arrays)
             const wsData = [
-                [companyName],           // แถว 1: ชื่อบริษัท
-                [address],               // แถว 2: ที่อยู่
-                [taxId],                 // แถว 3: เลขภาษี
-                [],                      // แถว 4: เว้นว่าง
-                [reportTitle],           // แถว 5: หัวข้อรายงาน
-                [],                      // แถว 6: เว้นว่าง
-                // แถว 7: หัวตาราง (Header Columns)
+                [companyName],           
+                [address],               
+                [taxId],                 
+                [],                      
+                [reportTitle],           
+                [],                      
                 ['งวด', 'เดือน', 'ปี', 'รหัสพนักงาน', 'ชื่อ-นามสกุล', 'ตำแหน่ง', 'เงินเดือน', 'ค่าตอบแทน', 'รายได้อื่นๆ', 'รวมรับ', 'ประกันสังคม', 'ภาษี', 'เบิกล่วงหน้า', 'กยศ.', 'ค่าน้ำ', 'ค่าไฟ', 'รวมหัก', 'ยอดสุทธิ', 'ธนาคาร']
             ];
 
-            // 5. วนลูปเอาข้อมูลพนักงานใส่เข้าไปทีละแถว
             filteredReportData.forEach(item => {
                 const income = item.salary + item.incentive + item.other;
                 const deduct = item.sso + item.tax + item.advance + item.water + item.electricity + (item.student_loan||0);
                 
                 wsData.push([
-                    item.period,                // งวด
-                    monthText,                  // เดือน (ใช้ชื่อเดือนแทนตัวเลข)
-                    item.year,                  // ปี
-                    item.emp_id,                // รหัส
-                    item.name,                  // ชื่อ
-                    item.pos,                   // ตำแหน่ง
-                    item.salary,                // เงินเดือน
-                    item.incentive,             // ค่าตอบแทน
-                    item.other,                 // อื่นๆ
-                    income,                     // รวมรับ
-                    item.sso,                   // ประกันสังคม
-                    item.tax,                   // ภาษี
-                    item.advance,               // เบิก
-                    (item.student_loan||0),     // กยศ.
-                    item.water,                 // น้ำ
-                    item.electricity,           // ไฟ
-                    deduct,                     // รวมหัก
-                    item.net,                   // สุทธิ
-                    item.bank || '-'            // ธนาคาร
+                    item.period,                
+                    monthText,                  
+                    item.year,                  
+                    item.emp_id,                
+                    item.name,                  
+                    item.pos,                   
+                    item.salary,                
+                    item.incentive,             
+                    item.other,                 
+                    income,                     
+                    item.sso,                   
+                    item.tax,                   
+                    item.advance,               
+                    (item.student_loan||0),     
+                    item.water,                 
+                    item.electricity,           
+                    deduct,                     
+                    item.net,                   
+                    item.bank || '-'            
                 ]);
             });
 
-            // 6. สร้าง Workbook และ Worksheet
             const wb = XLSX.utils.book_new();
             const ws = XLSX.utils.aoa_to_sheet(wsData);
 
-            // (Optional) จัดความกว้างคอลัมน์ให้สวยงาม (หน่วยเป็นตัวอักษร)
             ws['!cols'] = [
                 {wch: 5}, {wch: 10}, {wch: 6}, {wch: 12}, {wch: 25}, {wch: 20}, 
                 {wch: 12}, {wch: 12}, {wch: 12}, {wch: 15}, 
                 {wch: 12}, {wch: 10}, {wch: 12}, {wch: 10}, {wch: 10}, {wch: 10}, {wch: 15}, {wch: 15}, {wch: 20}
             ];
 
-            // 7. รวมร่างและดาวน์โหลดไฟล์
             XLSX.utils.book_append_sheet(wb, ws, "Payroll_Report");
             XLSX.writeFile(wb, `Salary_Report_${yearText}_${monthText}.xlsx`);
         };
@@ -2009,10 +2150,9 @@
                 {key:'company_name', value: document.getElementById('set-company').value},
                 {key:'tax_id', value: document.getElementById('set-tax').value},
                 {key:'company_address', value: document.getElementById('set-address').value},
-                {key:'acc_income_cats', value: document.getElementById('set-inc-cat').value},
-                {key:'acc_expense_cats', value: document.getElementById('set-exp-cat').value},
                 {key:'sso_rate', value: document.getElementById('set-sso').value},
-                {key:'sso_max', value: document.getElementById('set-sso-max').value}
+                {key:'sso_max', value: document.getElementById('set-sso-max').value},
+                {key:'sso_max_base', value: document.getElementById('set-sso-max-base').value}
             ];
             
             Swal.fire({title:'กำลังบันทึก...', didOpen: () => Swal.showLoading()});
@@ -2021,7 +2161,6 @@
             
             if(!error) {
                 updates.forEach(u => appState.settings[u.key] = u.value);
-                renderLedgerPage();
                 Swal.fire('บันทึกเรียบร้อย','','success'); 
             }
         }
